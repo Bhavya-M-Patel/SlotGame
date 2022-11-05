@@ -4,19 +4,15 @@ const fs = require('fs');
 
 class slotGame {
 
-  constructor(reel_size, reels_count, window_size) {
+  constructor(reel_size) {
     // setting default values if not matching with criteria
     if (!reel_size || reel_size < 10) {
       reel_size = 10
     }
-    if (!reels_count || reels_count < 3) {
-      reels_count = 3
-    }
 
-
-    this.window_size = window_size;
+    this.window_size = 3;
     this.reel_size = reel_size;
-    this.reels_count = reels_count;
+    this.reels_count = 5;
     this.spinCost = 10
     
     this.payTable = {
@@ -78,5 +74,5 @@ class slotGame {
 }
 
 
-let game = new slotGame(100, 5, 3)
+let game = new slotGame(100)
 game.create_game()
