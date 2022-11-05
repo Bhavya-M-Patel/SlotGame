@@ -1,5 +1,5 @@
 const fs = require('fs');
-const rn = require('random-number');
+const random_number = require('random-number');
 const readline = require('readline-sync');
 const chalk = require('chalk');
 const { Wallet } = require('./wallet')
@@ -38,25 +38,25 @@ let roll = function () {
             let profit = CalculateProfit(paylines);
 
             wallet.creditAmount(profit)
-            spin_count++;
+            
             return { window: w, winningLines: paylines, profit };
         }
         else {
-            return { err: 'Enter more coins' }
+            return { err: 'Add more coins' }
         }
     }
     else {
         return { err: "Setup not loaded" }
     }
 }
-
+// generate window_size * reel_count window from reels
 function generate_window(count, maximum, window_size, reels) {
     let window = []
 
     let mid = Math.floor(window_size / 2)
 
     for (let i = 0; i < count; i++) {
-        let random = rn({ min: 0, max: maximum - 1, integer: true })
+        let random = random_number({ min: 0, max: maximum - 1, integer: true })
 
         // find if generated random number is near to 0 or 19 to make reel circular
         let checkMin = (random - mid >= 0) ? false : true;
@@ -92,7 +92,7 @@ function generate_window(count, maximum, window_size, reels) {
     }
     return transposed_window;
 }
-
+// calculating profit from matched paylines
 function CalculateProfit(paylines) {
     if (paylines.length == 0) {
         return 0;
@@ -109,7 +109,7 @@ function CalculateProfit(paylines) {
     return profit;
 }
 
-// Functions for printing Information in CMD
+// Functions for printing colored messages in terminal
 
 function printMenu() {
     colorMsgs('1. Roll', 'info');
@@ -149,9 +149,9 @@ while (true) {
         case 1:
             let w = roll()
             if (!w.err) {
-                console.log(w.window);
-                console.log(w.winningLines);
-                console.log(w.profit);
+                console.log("window",w.window);
+                console.log("winnig lines",w.winningLines);
+                console.log("Total profit",w.profit);
             }
             else
                 colorMsgs(w.err, 'err');
@@ -160,11 +160,14 @@ while (true) {
             colorMsgs('Wallet contains ' + wallet.getAmount() + ' coins', 'msg');
             break;
         case 3:
+            // adding amount to wallet
             let amount = parseFloat(readline.question("Enter amount ")) || 0
             wallet.creditAmount(amount);
             colorMsgs('Amount added', 'msg');
             break;
+
         case 4: process.exit(0);
+
         default: console.log(colorMsgs('Enter valid choice', 'err'));
     }
 }

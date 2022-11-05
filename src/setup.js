@@ -1,29 +1,36 @@
-const rn = require("random-number");
+const random_number = require("random-number");
 const shuffle = require('secure-shuffle');
 const fs = require('fs');
 
 class slotGame {
 
   constructor(reel_size, reels_count, window_size) {
+    // setting default values if not matching with criteria
     if (!reel_size || reel_size < 10) {
       reel_size = 10
     }
     if (!reels_count || reels_count < 3) {
       reels_count = 3
     }
+
+
     this.window_size = window_size;
     this.reel_size = reel_size;
     this.reels_count = reels_count;
     this.spinCost = 10
+    
     this.payTable = {
+      // paying value : [elements]
       2: ["A", "B", "C"],
       5: ["J", "K",],
-      10: ["P","Q"],
+      10: ["P"],
     }
+
     this.paytable_prob_ratio = {
+      // paying value : probablity
       10: 0.1,
-      5: 0.4,
-      2: 0.5,
+      5: 0.3,
+      2: 0.6,
     };
     this.reels = []
   }
@@ -41,13 +48,16 @@ class slotGame {
 
   generate_single_reel() {
     let reel = [];
-    for (let x in this.paytable_prob_ratio) {
-      let N = this.get_item_count(this.reel_size, this.paytable_prob_ratio[x]);
-      let items = this.payTable[x];
+    for (let key in this.paytable_prob_ratio) {
+      // getting count of items to inserted in reel based on probablity 
+      let N = this.get_item_count(this.paytable_prob_ratio[key]);
+      // fetching symbols having key in pay_table as key 
+      let items = this.payTable[key];
       let total_items = items.length - 1;
 
+      // generating random elements and pushing to reel
       for (let i = 0; i < N; i++) {
-        reel.push(items[rn({ min: 0, max: total_items, integer: true })]);
+        reel.push(items[random_number({ min: 0, max: total_items, integer: true })]);
       }
     }
     shuffle(reel);
@@ -55,8 +65,8 @@ class slotGame {
   }
 
   // returns item count for probablity ratio
-  get_item_count(probablity, reel_size) {
-    return parseInt(reel_size * probablity);
+  get_item_count(probablity) {
+    return parseInt(this.reel_size * probablity);
   }
 
   //  saves the setup in JSON file
@@ -68,5 +78,5 @@ class slotGame {
 }
 
 
-let game = new slotGame(50, 5, 3)
+let game = new slotGame(100, 5, 3)
 game.create_game()
