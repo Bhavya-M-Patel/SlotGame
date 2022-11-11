@@ -25,13 +25,14 @@ class slotGame {
     this.paytable_prob_ratio = {
       // paying value : probablity
       10: 0.1,
-      5: 0.3,
-      2: 0.6,
+      5: 0.4,
+      2: 0.5,
     };
     this.reels = []
   }
 
   create_game() {
+    
 
     for (let i = 0; i < this.reels_count; i++) {
       let reel = this.generate_single_reel();
@@ -74,5 +75,5 @@ class slotGame {
 }
 
 
-let game = new slotGame(100)
+let game = new slotGame(50)
 game.create_game()
